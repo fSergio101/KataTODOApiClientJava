@@ -16,52 +16,58 @@
 package com.karumi.todoapiclient;
 
 import com.karumi.todoapiclient.dto.TaskDto;
-import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class TodoApiClientTest extends MockWebServerTest {
 
-  private TodoApiClient apiClient;
+    private TodoApiClient apiClient;
 
-  @Before public void setUp() throws Exception {
-    super.setUp();
-    String mockWebServerEndpoint = getBaseEndpoint();
-    apiClient = new TodoApiClient(mockWebServerEndpoint);
-  }
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        String mockWebServerEndpoint = getBaseEndpoint();
+        apiClient = new TodoApiClient(mockWebServerEndpoint);
+    }
 
-  @Test public void sendsAcceptAndContentTypeHeaders() throws Exception {
-    enqueueMockResponse();
+    @Test
+    public void sendsAcceptAndContentTypeHeaders() throws Exception {
+        enqueueMockResponse();
 
-    apiClient.getAllTasks();
+        apiClient.getAllTasks();
 
-    assertRequestContainsHeader("Accept", "application/json");
-  }
+        assertRequestContainsHeader("Accept", "application/json");
+    }
 
-  @Test public void sendsGetAllTaskRequestToTheCorrectEndpoint() throws Exception {
-    enqueueMockResponse();
+    @Test
+    public void sendsGetAllTaskRequestToTheCorrectEndpoint() throws Exception {
+        enqueueMockResponse();
 
-    apiClient.getAllTasks();
+        apiClient.getAllTasks();
 
-    assertGetRequestSentTo("/todos");
-  }
+        assertGetRequestSentTo("/todos");
+    }
 
-  @Test public void parsesTasksProperlyGettingAllTheTasks() throws Exception {
-    enqueueMockResponse(200, "getTasksResponse.json");
+    @Test
+    public void parsesTasksProperlyGettingAllTheTasks() throws Exception {
+        enqueueMockResponse(200, "getTasksResponse.json");
 
-    List<TaskDto> tasks = apiClient.getAllTasks();
+        List<TaskDto> tasks = apiClient.getAllTasks();
 
-    assertEquals(tasks.size(), 200);
-    assertTaskContainsExpectedValues(tasks.get(0));
-  }
+        assertEquals(tasks.size(), 200);
+        assertTaskContainsExpectedValues(tasks.get(0));
+    }
 
-  private void assertTaskContainsExpectedValues(TaskDto task) {
-    assertEquals(task.getId(), "1");
-    assertEquals(task.getUserId(), "1");
-    assertEquals(task.getTitle(), "delectus aut autem");
-    assertFalse(task.isFinished());
-  }
+    private void assertTaskContainsExpectedValues(TaskDto task) {
+        assertEquals(task.getId(), "1");
+        assertEquals(task.getUserId(), "1");
+        assertEquals(task.getTitle(), "delectus aut autem");
+        assertFalse(task.isFinished());
+    }
 }
